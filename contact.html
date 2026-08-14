@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Contact Us — FaishonNepal</title>
+<link rel="stylesheet" href="app.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-client.js"></script>
+<style>
+.contact-wrap{max-width:980px;margin:40px auto;padding:0 20px}.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.contact-card{background:#fff;border:1px solid #e6e8ec;border-radius:18px;padding:22px}.contact-card h2{margin:0 0 8px}.contact-card p{color:#68707d;line-height:1.6}.contact-card a{color:#dc143c;font-weight:700;text-decoration:none}.contact-form{grid-column:1/-1}.contact-form label{display:block;font-weight:700;margin:14px 0 6px}.contact-form input,.contact-form textarea{width:100%;box-sizing:border-box;border:1px solid #d9dde4;border-radius:10px;padding:12px;font:inherit}.contact-form textarea{min-height:130px;resize:vertical}.primary{margin-top:16px;background:#dc143c;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-weight:800;cursor:pointer}.notice{margin-top:12px;padding:12px;border-radius:10px;background:#f8fafc;display:none}@media(max-width:700px){.contact-grid{grid-template-columns:1fr}.contact-form{grid-column:auto}}
+</style>
+</head>
+<body>
+<header class="appbar"><a class="brand" href="index.html"><img class="app-logo" src="faishonnepal-logo-exact%20(2).png" alt="FaishonNepal"></a><nav><a href="index.html">Home</a><a href="shop.html">Shop</a><a href="account.html">Account</a></nav></header>
+<main class="contact-wrap"><p class="eyebrow">FAISHONNEPAL</p><h1>Contact Us</h1><p class="muted">We are here to help customers and sellers across Nepal.</p>
+<div class="contact-grid">
+<section class="contact-card"><h2>📞 Phone</h2><p>For general assistance and marketplace support.</p><a href="tel:+9779811515500">9811515500</a></section>
+<section class="contact-card"><h2>✉️ Email</h2><p>Send us your questions, complaints or business enquiries.</p><a href="mailto:faishon_nepaladmin09@gmail.com">faishon_nepaladmin09@gmail.com</a></section>
+<section class="contact-card"><h2>📍 Location</h2><p>Krishnanagar-5, Kapilvastu, Nepal<br>ZIP Code: 32800</p></section>
+<section class="contact-card"><h2>🕘 Support</h2><p>Customer and seller support for orders, verification and marketplace issues.</p></section>
+<section class="contact-card contact-form"><h2>Send us a message</h2><form id="contactForm"><label>Name</label><input id="name" required placeholder="Your name"><label>Email</label><input id="email" type="email" required placeholder="you@example.com"><label>Message</label><textarea id="message" required placeholder="How can we help?"></textarea><button class="primary">Send message</button></form><div id="notice" class="notice"></div></section>
+</div></main>
+<script>
+const notice=(text,ok=true)=>{const n=document.getElementById('notice');n.textContent=text;n.style.display='block';n.style.color=ok?'#166534':'#b42318';n.style.background=ok?'#ecfdf3':'#fef2f2'};
+document.getElementById('contactForm').addEventListener('submit',async e=>{e.preventDefault();const u=await currentUser();if(!u){location.href='login.html';return}const {data:admins,error:ae}=await faishonSupabase.from('profiles').select('id').eq('role','admin').limit(1);if(ae||!admins?.length){notice('Unable to connect to support right now.',false);return}const {error}=await faishonSupabase.from('messages').insert({sender_id:u.id,receiver_id:admins[0].id,message:`${document.getElementById('name').value}\n${document.getElementById('email').value}\n\n${document.getElementById('message').value}`});if(error){notice(error.message,false);return}notice('Message sent successfully. Our team will contact you soon.');e.target.reset()});
+</script></body></html>
